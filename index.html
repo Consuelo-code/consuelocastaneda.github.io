@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Interactivo | María del Consuelo Castañeda López</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Harmony -->
+    <!-- Application Structure Plan: The SPA uses a top navigation bar for quick access to thematic sections (Home, Competencies, Experience, Skills, Training, Contributions). This structure is chosen over a chronological format to allow a busy user (like a medical faculty head) to quickly jump to the information most relevant to them. Key interactions include an interactive radar chart for a quick visual summary of skills and a filterable list for the extensive training section, preventing information overload and demonstrating organizational skills. This user-centric design prioritizes clarity, speed, and targeted information retrieval. -->
+    <!-- Visualization & Content Choices: 
+        - Professional Profile (Inform): A concise text block to establish expertise.
+        - Core Competencies (Organize): Card-based layout with icons (Unicode) for high-level grouping. Goal: Quick scanning. Method: HTML/Tailwind. Justification: Visually separates key strengths.
+        - Skills Radar Chart (Compare/Inform): Visualizes proficiency across key domains. Goal: Provide a memorable, data-driven summary. Method: Chart.js Canvas. Justification: More engaging than a list and showcases tech literacy.
+        - Experience Accordion (Organize): Collapsible sections for job details. Goal: Keep the UI clean. Method: HTML/JS. Justification: Reduces initial visual clutter.
+        - Filterable Training List (Organize/Explore): Buttons filter a long list of courses. Goal: Manage large dataset and empower user choice. Method: JS data attributes and class toggling. Justification: Turns an overwhelming list into an interactive discovery tool.
+        - Contributions Timeline (Change/Inform): Vertical timeline for publications/talks. Goal: Show career progression and community engagement. Method: HTML/Tailwind. Justification: More dynamic and visually appealing than a simple list. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #F8F7F4;
+            color: #3D405B;
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #D36A5D;
+            border-bottom-color: #D36A5D;
+        }
+        .filter-btn {
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .filter-btn.active {
+            background-color: #3D405B !important;
+            color: #FFFFFF !important;
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 50vh;
+            max-height: 450px;
+            width: 100%;
+            max-width: 450px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.375rem;
+            top: 0;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            background-color: #F8F7F4;
+            border: 4px solid #81B29A;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="text-xl font-bold text-gray-800">M.C. Castañeda López</div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#inicio" class="nav-link">Inicio</a>
+                <a href="#competencias" class="nav-link">Competencias</a>
+                <a href="#experiencia" class="nav-link">Experiencia</a>
+                <a href="#habilidades" class="nav-link">Habilidades</a>
+                <a href="#formacion" class="nav-link">Formación</a>
+                <a href="#contribuciones" class="nav-link">Contribuciones</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden p-2">
+                <span class="text-3xl">☰</span>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden bg-white">
+            <a href="#inicio" class="block py-2 px-6 text-center nav-link">Inicio</a>
+            <a href="#competencias" class="block py-2 px-6 text-center nav-link">Competencias</a>
+            <a href="#experiencia" class="block py-2 px-6 text-center nav-link">Experiencia</a>
+            <a href="#habilidades" class="block py-2 px-6 text-center nav-link">Habilidades</a>
+            <a href="#formacion" class="block py-2 px-6 text-center nav-link">Formación</a>
+            <a href="#contribuciones" class="block py-2 px-6 text-center nav-link">Contribuciones</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <!-- Section: Inicio -->
+        <section id="inicio" class="min-h-[80vh] flex items-center">
+            <div class="w-full text-center md:text-left">
+                <h1 class="text-4xl md:text-6xl font-bold text-gray-800 leading-tight">María del Consuelo Castañeda López</h1>
+                <h2 class="text-2xl md:text-3xl font-light mt-2" style="color:#D36A5D;">Maestra en T.I. | Especialista en Alfabetización Informacional para Ciencias de la Salud</h2>
+                <p class="mt-6 max-w-3xl mx-auto md:mx-0 text-lg text-gray-600">
+                    Docente con más de 15 años de experiencia en la Facultad de Ciencias de la Salud (UJED), dedicada a potenciar la formación de profesionales de la salud a través de competencias digitales. Experta en búsqueda y gestión de evidencia científica, uso de bases de datos académicas, y la aplicación ética de la IA en investigación. Mi objetivo es formar médicos y profesionales críticos, capaces de navegar el ecosistema digital y fundamentar su práctica en información de la más alta calidad.
+                </p>
+                <div class="mt-8 flex justify-center md:justify-start gap-4 text-sm">
+                    <span class="font-semibold">📧 consuelo.castaneda@ujed.mx</span>
+                    <span class="font-semibold">📞 (871) 112 35 37</span>
+                    <a href="https://www.linkedin.com/in/consuelocastaneda/" target="_blank" class="font-semibold hover:text-[#D36A5D] transition-colors">🔗 LinkedIn</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Competencias Clave -->
+        <section id="competencias" class="py-20">
+            <h2 class="text-3xl font-bold text-center mb-2">Competencias Clave</h2>
+            <p class="text-center text-gray-600 max-w-2xl mx-auto mb-12">Mi perfil se centra en la intersección de la tecnología, la pedagogía y la investigación, con un enfoque específico en las necesidades del sector salud.</p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow">
+                    <div class="text-5xl mb-4" style="color: #81B29A;">🔬</div>
+                    <h3 class="text-xl font-bold mb-2">Alfabetización Informacional en Salud</h3>
+                    <p class="text-gray-600">Búsqueda sistemática de evidencia (Metodología PICO), evaluación crítica de fuentes y gestión de referencias para una práctica basada en evidencia.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow">
+                    <div class="text-5xl mb-4" style="color: #81B29A;">👩‍🏫</div>
+                    <h3 class="text-xl font-bold mb-2">Tecnologías para la Educación</h3>
+                    <p class="text-gray-600">Diseño instruccional para entornos virtuales, creación de cursos en línea (Estándar EC0366) y manejo de plataformas como Google Workspace y aulas virtuales.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-md text-center hover:shadow-xl transition-shadow">
+                    <div class="text-5xl mb-4" style="color: #81B29A;">🤖</div>
+                    <h3 class="text-xl font-bold mb-2">Inteligencia Artificial y Datos</h3>
+                    <p class="text-gray-600">Aplicación ética de IA generativa en investigación, herramientas de IA para la productividad y análisis de datos para la toma de decisiones informada.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Experiencia -->
+        <section id="experiencia" class="py-20 bg-white rounded-lg shadow-lg">
+             <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-12">Experiencia Docente y Profesional</h2>
+                <div class="max-w-4xl mx-auto">
+                    <div class="experience-item border-b pb-4 mb-4">
+                        <h3 class="text-xl font-bold cursor-pointer flex justify-between items-center">
+                            <span>Docente, Gestión de la Información | FACSA, UJED</span>
+                            <span class="text-sm font-normal text-gray-500">2021 - Actualidad</span>
+                        </h3>
+                        <div class="experience-details mt-2 text-gray-600 space-y-2">
+                            <p>Diseño e imparto el programa formativo para desarrollar habilidades de búsqueda sistemática y evaluación crítica de literatura científica en estudiantes de ciencias de la salud.</p>
+                            <p>Capacito en el uso avanzado de bases de datos como <strong>Elsevier (Scopus, ScienceDirect), PubMed</strong> y bibliotecas digitales.</p>
+                            <p>Fomento el uso de gestores bibliográficos como <strong>Mendeley</strong> para la organización de la investigación y la correcta citación.</p>
+                            <p>Integro el uso ético y efectivo de la <strong>Inteligencia Artificial generativa</strong> como herramienta de apoyo en la investigación académica.</p>
+                        </div>
+                    </div>
+                     <div class="experience-item border-b pb-4 mb-4">
+                        <h3 class="text-xl font-bold cursor-pointer flex justify-between items-center">
+                            <span>Responsable de Sala de Informática | FACSA, UJED</span>
+                             <span class="text-sm font-normal text-gray-500">2009 - Actualidad</span>
+                        </h3>
+                        <div class="experience-details mt-2 text-gray-600 space-y-2 hidden">
+                             <p>Administro la infraestructura tecnológica y oriento a cientos de estudiantes y docentes en el uso de recursos digitales y bases de datos académicas.</p>
+                             <p>Facilito la gestión de referencias digitales y ofrezco soporte en procedimientos académicos y tecnológicos de la facultad.</p>
+                        </div>
+                    </div>
+                     <div class="experience-item">
+                        <h3 class="text-xl font-bold cursor-pointer flex justify-between items-center">
+                            <span>Instructora de Talleres | FACSA, UJED</span>
+                            <span class="text-sm font-normal text-gray-500">2022 - Presente</span>
+                        </h3>
+                        <div class="experience-details mt-2 text-gray-600 space-y-2 hidden">
+                             <p>Impartí el taller "Herramientas Digitales en la Nube" para personal docente y administrativo, mejorando la productividad y colaboración mediante <strong>Google Workspace</strong>.</p>
+                             <p>He sido instructora del taller "Introducción a las revisiones sistemáticas de literatura", una competencia clave para la investigación médica actual.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Habilidades -->
+        <section id="habilidades" class="py-20">
+            <h2 class="text-3xl font-bold text-center mb-2">Visualización de Habilidades</h2>
+            <p class="text-center text-gray-600 max-w-2xl mx-auto mb-12">Este gráfico interactivo representa un balance de mis competencias. Cada eje muestra un área de especialización, demostrando un perfil integral y adaptado a las exigencias de la educación superior moderna en salud.</p>
+            <div class="chart-container">
+                <canvas id="skillsChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Section: Formación -->
+        <section id="formacion" class="py-20 bg-white rounded-lg shadow-lg">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-2">Formación Continua Relevante</h2>
+                <p class="text-center text-gray-600 max-w-3xl mx-auto mb-8">Comprometida con el aprendizaje permanente, mi formación se enfoca en áreas cruciales para la docencia e investigación en salud. Usa los filtros para explorar los cursos por área de interés.</p>
+                <div class="flex flex-wrap justify-center gap-2 mb-8">
+                    <button class="filter-btn active bg-gray-200 text-gray-700 py-2 px-4 rounded-full" data-filter="all">Todos</button>
+                    <button class="filter-btn bg-gray-200 text-gray-700 py-2 px-4 rounded-full" data-filter="salud">Salud y Búsqueda Científica</button>
+                    <button class="filter-btn bg-gray-200 text-gray-700 py-2 px-4 rounded-full" data-filter="docencia">Docencia y Pedagogía</button>
+                    <button class="filter-btn bg-gray-200 text-gray-700 py-2 px-4 rounded-full" data-filter="ia">Tecnología e IA</button>
+                </div>
+                <ul id="courses-list" class="space-y-3 max-w-4xl mx-auto">
+                    <li class="course-item p-3 rounded-md bg-stone-100" data-category="salud"><strong>Introducción a las Revisiones Sistemáticas</strong> | PAHO (2024)</li>
+                    <li class="course-item p-3 rounded-md bg-stone-100" data-category="salud"><strong>Introducción a la Epidemiología</strong> | PAHO (2025)</li>
+                    <li class="course-item p-3 rounded-md bg-stone-100" data-category="salud"><strong>Ciencia Abierta: de la recomendación a la acción</strong> | UNESCO (2024)</li>
+                    <li class="course-item p-3 rounded-md bg-stone-100" data-category="salud"><strong>Transformación Digital del Sector Salud</strong> | PAHO (2024)</li>
+                    <li class="course-item p-3 rounded-md bg-stone-100" data-category="salud"><strong>Múltiples talleres y cursos</strong> | Elsevier sobre Scopus, ScienceDirect, Mendeley y Metodología PICO (2021-2023)</li>
+                    <li class="course-item p-3 rounded-md bg-stone-100" data-category="docencia"><strong>Desarrollo de cursos de formación en línea (EC0366)</strong> | SEP-CONOCER (2024)</li>
+                    <li class="course-item p-3 rounded-md bg-stone-100" data-category="docencia"><strong>Diplomado en Actualización y Desarrollo de Competencias Docentes</strong> | UJED (2025)</li>
+                    <li class="course-item p-3 rounded-md bg-stone-100" data-category="docencia"><strong>Diplomado Rutas en Investigación Cualitativa</strong> | UJED (2024)</li>
+                    <li class="course-item p-3 rounded-md bg-stone-100" data-category="docencia"><strong>Diplomado Innovación en la Enseñanza</strong> | Harvard Business Publishing (2024)</li>
+                    <li class="course-item p-3 rounded-md bg-stone-100" data-category="ia"><strong>Inteligencia Artificial</strong> | México X (2024)</li>
+                    <li class="course-item p-3 rounded-md bg-stone-100" data-category="ia"><strong>Introducción a Python, POO, interfaces gráficas</strong> | UNAM (2022)</li>
+                    <li class="course-item p-3 rounded-md bg-stone-100" data-category="ia"><strong>Chat GPT</strong> | UJED (2024)</li>
+                    <li class="course-item p-3 rounded-md bg-stone-100" data-category="ia"><strong>Inteligencia artificial para el trabajo</strong> | Platzi (2023)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section: Contribuciones -->
+        <section id="contribuciones" class="py-20">
+            <h2 class="text-3xl font-bold text-center mb-12">Ponencias y Contribuciones a la Comunidad</h2>
+            <div class="max-w-3xl mx-auto">
+                <div class="relative border-l-2 border-gray-200 pl-16">
+                    <div class="timeline-item mb-12">
+                        <h4 class="font-bold text-lg" style="color:#81B29A;">Instructora de Taller</h4>
+                        <p class="text-sm text-gray-500 mb-1">Congreso Internacional COINCIDES, FACSA (Nov. 2024)</p>
+                        <p class="text-gray-600">"Introducción a las revisiones sistemáticas de literatura".</p>
+                    </div>
+                    <div class="timeline-item mb-12">
+                        <h4 class="font-bold text-lg" style="color:#81B29A;">Ponente</h4>
+                        <p class="text-sm text-gray-500 mb-1">Facultad de Geofísica, UNAM (Ago. 2023)</p>
+                        <p class="text-gray-600">"Cómo sobrevivir a las Fake News".</p>
+                    </div>
+                    <div class="timeline-item mb-12">
+                        <h4 class="font-bold text-lg" style="color:#81B29A;">Participante Activa en Congresos</h4>
+                        <p class="text-sm text-gray-500 mb-1">2023 - 2025</p>
+                        <p class="text-gray-600">Asistencia y participación constante en foros y congresos clave sobre Educación Médica, Inteligencia Artificial, Docencia Universitaria y Bibliotecas Digitales (AMFEM, UJED, UNAM).</p>
+                    </div>
+                     <div class="timeline-item mb-12">
+                        <h4 class="font-bold text-lg" style="color:#81B29A;">Voluntariado y Liderazgo</h4>
+                        <p class="text-sm text-gray-500 mb-1">TechnoLatinas (2020 - Actualidad)</p>
+                        <p class="text-gray-600">Desarrollo de habilidades de liderazgo, comunicación y adaptabilidad como moderadora, anfitriona e invitada en eventos de tecnología.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center py-8">
+        <p>Maria del Consuelo Castañeda Lopez</p>
+        <p class="text-sm text-gray-400">Gómez Palacio, Durango, México</p>
+        <div class="mt-4 flex justify-center gap-4">
+             <a href="mailto:consuelo.castaneda@ujed.mx" class="hover:text-[#81B29A]">Correo</a>
+             <a href="https://www.linkedin.com/in/consuelocastaneda/" target="_blank" class="hover:text-[#81B29A]">LinkedIn</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile Menu
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+            });
+
+            // Navigation scroll highlighting
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            window.onscroll = () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            };
+
+            // Experience Accordion
+            const experienceItems = document.querySelectorAll('.experience-item h3');
+            experienceItems.forEach(header => {
+                header.addEventListener('click', () => {
+                    const details = header.nextElementSibling;
+                    const allDetails = document.querySelectorAll('.experience-details');
+                    
+                    // Toggle current item
+                    const isHidden = details.classList.contains('hidden');
+
+                    // Close all others
+                    allDetails.forEach(d => d.classList.add('hidden'));
+                    
+                    // Open the clicked one if it was closed
+                    if(isHidden) {
+                       details.classList.remove('hidden');
+                    }
+                });
+            });
+
+            // Skills Chart
+            const ctx = document.getElementById('skillsChart').getContext('2d');
+            const skillsChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        'Alfabetización Informacional',
+                        'Docencia y Pedagogía',
+                        'Tecnologías Educativas',
+                        'Gestión de Investigación',
+                        'Comunicación y Liderazgo',
+                        'IA y Datos'
+                    ],
+                    datasets: [{
+                        label: 'Nivel de Competencia',
+                        data: [95, 90, 85, 95, 80, 85],
+                        backgroundColor: 'rgba(129, 178, 154, 0.2)',
+                        borderColor: 'rgba(129, 178, 154, 1)',
+                        pointBackgroundColor: 'rgba(129, 178, 154, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(129, 178, 154, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'rgba(61, 64, 91, 0.2)'
+                            },
+                            grid: {
+                                color: 'rgba(61, 64, 91, 0.2)'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 12
+                                },
+                                color: '#3D405B'
+                            },
+                            ticks: {
+                                backdropColor: '#F8F7F4',
+                                color: '#3D405B'
+                            },
+                            min: 0,
+                            max: 100
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                           display: false
+                        }
+                    }
+                }
+            });
+
+            // Course Filter
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const courses = document.querySelectorAll('.course-item');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.dataset.filter;
+                    
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    courses.forEach(course => {
+                        if (filter === 'all' || course.dataset.category === filter) {
+                            course.style.display = 'block';
+                        } else {
+                            course.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
